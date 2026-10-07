@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ------------------------------------------------------------------
+   Design tokens
+   Palette is drawn from the Deccan: basalt (ink), laterite (accent),
+   limewash (paper) and monsoon green (support). Every colour used in
+   components comes from here, so a re-brand is a one-file change.
+------------------------------------------------------------------- */
+@theme {
+  --color-paper: #f5f1e8;
+  --color-paper-2: #ece6d8;
+  --color-ink: #1b1a17;
+  --color-ink-2: #3d3a34;
+  --color-mute: #6f695e;
+  --color-line: #d9d1bf;
+  --color-laterite: #b5451b;
+  --color-laterite-2: #d8602c;
+  --color-monsoon: #2f4a3a;
+  --color-sand: #e8dcc2;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    background: var(--color-laterite);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-laterite);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+  }
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-laterite);
+  }
+  .display-xl { font-size: clamp(2.75rem, 7vw, 6.25rem); }
+  .display-lg { font-size: clamp(2.25rem, 5vw, 4.25rem); }
+  .display-md { font-size: clamp(1.75rem, 3.4vw, 2.75rem); }
+
+  /* Subtle architectural grid used behind some sections */
+  .blueprint {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-ink) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-ink) 6%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Route transition (see components/motion/PageTransition.tsx) */
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: var(--color-laterite);
+  transform-origin: top;
+  animation: curtain 0.8s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+.page-enter {
+  animation: page-enter 0.9s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes curtain {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0); }
+}
+@keyframes page-enter {
+  from { transform: translateY(24px); }
+  to { transform: none; }
+}
